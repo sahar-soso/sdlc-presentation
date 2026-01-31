@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SDLC Interactive Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&family=Heebo:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Assistant', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .header { text-align: center; margin-bottom: 20px; z-index: 20; }
+        .header h1 { font-family: 'Heebo', sans-serif; font-size: clamp(1.4rem, 5vw, 2.2rem); margin: 0; color: #3b82f6; }
+        .header p { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
+
+        .sdlc-container {
+            position: relative;
+            width: min(88vw, 480px);
+            height: min(88vw, 480px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orbit {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px dashed rgba(255,255,255,0.1);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .info-center {
+            width: 62%;
+            height: 62%;
+            background: var(--card);
+            border: 4px solid #ef4444;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 0 0 35px rgba(0,0,0,0.5);
+            z-index: 10;
+            transition: all 0.3s ease-out;
+        }
+
+        .info-center h3 { margin: 0 0 6px; font-size: clamp(1rem, 4.5vw, 1.4rem); color: inherit; font-family: 'Heebo', sans-serif; }
+        .info-center p { margin: 0; font-size: clamp(0.75rem, 3.2vw, 0.95rem); line-height: 1.4; color: #fff; }
+        .info-center .sub { margin-top: 10px; font-size: clamp(0.65rem, 2.8vw, 0.8rem); opacity: 0.7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; width: 85%; }
+
+        .node {
+            position: absolute;
+            width: clamp(60px, 15vw, 85px);
+            height: clamp(60px, 15vw, 85px);
+            background: var(--card);
+            border: 3px solid var(--c);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: clamp(0.55rem, 2vw, 0.75rem);
+            color: var(--c);
+            z-index: 15;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .node:hover { transform: translate(-50%, -50%) scale(1.08); }
+        .node.active {
+            background: var(--c);
+            color: #fff !important;
+            box-shadow: 0 0 20px var(--c);
+            transform: translate(-50%, -50%) scale(1.1);
+            border-color: #fff;
+        }
+
+        /* Fixed positions for reliability */
+        .n1 { top: 0%; left: 50%; --c: #ef4444; }
+        .n2 { top: 20%; left: 90%; --c: #f59e0b; }
+        .n3 { top: 65%; left: 95%; --c: #10b981; }
+        .n4 { top: 95%; left: 70%; --c: #06b6d4; }
+        .n5 { top: 95%; left: 30%; --c: #3b82f6; }
+        .n6 { top: 65%; left: 5%; --c: #8b5cf6; }
+        .n7 { top: 20%; left: 10%; --c: #ec4899; }
+
+        @media (max-width: 480px) {
+            .sdlc-container { width: 320px; height: 320px; }
+            .node { width: 68px; height: 68px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>SDLC Life Cycle</h1>
+        <p>בחרו שלב בתהליך כדי לראות את הפירוט שלו</p>
+    </div>
+
+    <div class="sdlc-container">
+        <div class="orbit"></div>
+        <div class="node n1 active" onclick="update(1, this)">1. Planning</div>
+        <div class="node n2" onclick="update(2, this)">2. Analysis</div>
+        <div class="node n3" onclick="update(3, this)">3. Design</div>
+        <div class="node n4" onclick="update(4, this)">4. Coding</div>
+        <div class="node n5" onclick="update(5, this)">5. Testing</div>
+        <div class="node n6" onclick="update(6, this)">6. Deployment</div>
+        <div class="node n7" onclick="update(7, this)">7. Maintenance</div>
+
+        <div class="info-center" id="display" style="border-color: #ef4444; color: #ef4444;">
+            <h3 id="t">Planning</h3>
+            <p id="d">תכנון הפרויקט: קביעת היקף, לוחות זמנים, משאבים וסיכונים.</p>
+            <div class="sub" id="s">כולל תכנון הבדיקות ברמה גבוהה.</div>
+        </div>
+    </div>
+
+    <script>
+        const content = {
+            1: { t: "Planning", d: "תכנון הפרויקט: קביעת היקף, לוחות זמנים, משאבים וסיכונים.", s: "כולל תכנון הבדיקות ברמה גבוהה.", c: "#ef4444" },
+            2: { t: "Analysis", d: "ניתוח דרישות: איסוף והגדרת דרישות עסקיות ופונקציונליות.", s: "בדיקות סטטיות של דרישות מתחילות כאן.", c: "#f59e0b" },
+            3: { t: "Design", d: "עיצוב המערכת: הגדרת ארכיטקטורה, רכיבים, ממשקים וזרימות.", s: "בדיקות סטטיות של מסמכי עיצוב ותכנון רמות בדיקה.", c: "#10b981" },
+            4: { t: "Coding", d: "פיתוח וקידוד: מימוש הדרישות בקוד.", s: "בדיקות יחידה ובדיקות קוד.", c: "#06b6d4" },
+            5: { t: "Testing", d: "בדיקות מערכת וקבלה: בדיקות פונקציונליות ולא פונקציונליות.", s: "כולל בדיקות רגרסיה.", c: "#3b82f6" },
+            6: { t: "Deployment", d: "הטמעה ופריסה: העלאת המערכת לסביבת ייצור.", s: "בדיקות התקנה ובדיקות עשן.", c: "#8b5cf6" },
+            7: { t: "Maintenance", d: "תחזוקה: תיקון תקלות, שיפורים ושינויים.", s: "בדיקות רגרסיה ובדיקות השפעה.", c: "#ec4899" }
+        };
+
+        function update(id, el) {
+            document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            
+            const item = content[id];
+            const box = document.getElementById('display');
+            
+            box.style.opacity = 0;
+            setTimeout(() => {
+                box.style.borderColor = item.c;
+                box.style.color = item.c;
+                document.getElementById('t').innerText = item.t;
+                document.getElementById('d').innerText = item.d;
+                document.getElementById('s').innerText = item.s;
+                box.style.opacity = 1;
+            }, 100);
+        }
+    </script>
+</body>
+</html>
